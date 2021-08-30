@@ -13,14 +13,28 @@ window.addEventListener('DOMContentLoaded', (event) =>{
             textError.textContent = e;
         }
     });
-
+    
     const salary = document.querySelector('#salary');
         const output = document.querySelector('.salary-output');
         output.textContent = salary.value;
         salary.addEventListener('input',function(){
             output.textContent = salary.value;
-        });
     });
+
+    const date = document.querySelector('#date');
+    date.addEventListener('input', function() {
+       const startDate = Date.parse(getInputValueById('#day') + " " +
+                                                    getInputValueById('#month') + " " +
+                                                    getInputValueById('#year'));
+       try {
+          (new EmployeePayrollData()).startDate = startDate;
+          setTextValue('.date-error', "");
+       } catch (e) {
+          setTextValue('.date-error', e);
+    }
+    });
+ });
+
         
     const save = () => {
         try {
@@ -29,7 +43,7 @@ window.addEventListener('DOMContentLoaded', (event) =>{
         } catch (e) {
            return;
         }
-     }
+     };
      
      const createEmployeePayroll = () => {
         let employeePayrollData = new EmployeePayrollData();
@@ -75,4 +89,32 @@ window.addEventListener('DOMContentLoaded', (event) =>{
        }
        alert(employeePayrollList.toString());
        localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
+     }
+     const resetForm = () => {
+        setValue('#name','');
+        unsetSelectedValues('[name=profile]');
+        unsetSelectedValues('[name=gender]');
+        unsetSelectedValues('[name=department]');
+        setValue('#salary','');
+        setValue('#notes','');
+        setValue('#day','Day');
+        setValue('#month','Month');
+        setValue('#year','Year');
+     };
+     
+     const unsetSelectedValues = (propertyValue) => {
+        let allItems = document.querySelectorAll(propertyValue);
+        allItems.forEach(item => {
+           item.checked = false;
+        });
+     }
+     
+     const setTextValue = (id, value) => {
+        const element = document.querySelector(id);
+        element.textContent = value;
+     }
+     
+     const setValue = (id, value) => {
+        const element = document.querySelector(id);
+        element.value = value;
      }
